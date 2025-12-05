@@ -432,6 +432,16 @@ v91:AddButton({
         })
     end
 })
+v91:AddButton({
+    Title = "Noclip",
+    Description = "It is used to go through walls.",
+    Callback = function()loadstring(game:HttpGet("https://raw.githubusercontent.com/ianxzz/Noclip/refs/heads/main/ScriptLua"))()
+            Title = "Nokt",
+            Content = "Noclip actived",
+            Duration = 3
+        })
+    end
+})
 local v95 = v6.Teleport:AddSection("Player Teleportation")
 local function vu102()
     local v96 = vu7
