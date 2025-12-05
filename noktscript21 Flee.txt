@@ -1,0 +1,558 @@
+-- ts file was generated at discord.gg/25ms
+
+
+local vu1 = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local v2 = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+local v3 = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
+local v4 = vu1:CreateWindow({
+    Title = "Noktscript21",
+    SubTitle = "Flee the Facility",
+    TabWidth = 180,
+    Size = UDim2.fromOffset(580, 460),
+    Acrylic = true,
+    Theme = "Darker",
+    MinimizeKey = Enum.KeyCode.RightShift
+})
+local vu5 = vu1.Options
+local v6 = {
+    Visuals = v4:AddTab({
+        Title = "Visuals",
+        Icon = "eye"
+    }),
+    Utilities = v4:AddTab({
+        Title = "Utilities",
+        Icon = "hammer"
+    }),
+    Movement = v4:AddTab({
+        Title = "Movement",
+        Icon = "user"
+    }),
+    Teleport = v4:AddTab({
+        Title = "Teleport",
+        Icon = "locate-fixed"
+    }),
+    Settings = v4:AddTab({
+        Title = "Settings",
+        Icon = "settings"
+    })
+}
+local vu7 = game:GetService("Players")
+local vu8 = game:GetService("Workspace")
+local v9 = game:GetService("RunService")
+game:GetService("TweenService")
+game:GetService("Lighting")
+local vu10 = vu7.LocalPlayer
+local v11 = vu10.Character or vu10.CharacterAdded:Wait()
+local vu12 = v11:WaitForChild("Humanoid")
+local vu13 = v11:WaitForChild("HumanoidRootPart")
+local vu14 = {
+    players = {},
+    pcs = {},
+    pods = {},
+    exits = {}
+}
+local vu15 = nil
+if vu13 then
+    vu15 = Instance.new("PointLight", vu13)
+    vu15.Brightness = 0
+    vu15.Range = 60
+    vu15.Shadows = true
+    vu15.Color = Color3.fromRGB(250, 250, 220)
+else
+    warn("Nokt: Could not find RootPart for flashlight.")
+end
+local vu16 = 18
+local vu17 = false
+local function vu23()
+    local v18 = vu7
+    local v19, v20, v21 = ipairs(v18:GetPlayers())
+    while true do
+        local v22
+        v21, v22 = v19(v20, v21)
+        if v21 == nil then
+            break
+        end
+        if v22.Character and v22.Character:FindFirstChild("BeastPowers") then
+            return v22
+        end
+    end
+    return nil
+end
+local function vu31()
+    local v24 = vu23()
+    local v25 = vu7
+    local v26, v27, v28 = ipairs(v25:GetPlayers())
+    local v29 = {}
+    while true do
+        local v30
+        v28, v30 = v26(v27, v28)
+        if v28 == nil then
+            break
+        end
+        if v30 ~= v24 and v30.Character then
+            table.insert(v29, v30)
+        end
+    end
+    return v29
+end
+local function vu75()
+    local v32, v33, v34 = ipairs(vu14.players)
+    while true do
+        local v35
+        v34, v35 = v32(v33, v34)
+        if v34 == nil then
+            break
+        end
+        if v35 and v35.Parent then
+            v35:Destroy()
+        end
+    end
+    vu14.players = {}
+    if vu5.FtfEspPlayers and vu5.FtfEspPlayers.Value then
+        local v36 = vu23()
+        local v37 = vu7
+        local v38, v39, v40 = ipairs(v37:GetPlayers())
+        while true do
+            local v41
+            v40, v41 = v38(v39, v40)
+            if v40 == nil then
+                break
+            end
+            if v41 ~= vu10 and v41.Character and v41.Character:FindFirstChild("HumanoidRootPart") then
+                local v42 = v41.Character
+                local v43 = Instance.new("Highlight")
+                v43.Name = "NoktPlayerESP"
+                v43.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                v43.Adornee = v42
+                if v41 == v36 then
+                    v43.FillColor = Color3.fromRGB(255, 0, 0)
+                    v43.OutlineColor = Color3.fromRGB(180, 0, 0)
+                else
+                    v43.FillColor = Color3.fromRGB(0, 255, 0)
+                    v43.OutlineColor = Color3.fromRGB(0, 180, 0)
+                end
+                v43.FillTransparency = 0.6
+                v43.OutlineTransparency = 0.3
+                v43.Parent = vu8
+                table.insert(vu14.players, v43)
+            end
+        end
+    end
+    local v44, v45, v46 = ipairs(vu14.pcs)
+    while true do
+        local v47
+        v46, v47 = v44(v45, v46)
+        if v46 == nil then
+            break
+        end
+        if v47 and v47.Parent then
+            v47:Destroy()
+        end
+    end
+    vu14.pcs = {}
+    if vu5.FtfEspPcs and vu5.FtfEspPcs.Value then
+        local v48 = vu8
+        local v49, v50, v51 = ipairs(v48:GetDescendants())
+        while true do
+            local v52
+            v51, v52 = v49(v50, v51)
+            if v51 == nil then
+                break
+            end
+            if v52.Name == "ComputerTable" and v52:IsA("Model") then
+                local v53 = v52:FindFirstChild("Screen")
+                if v53 then
+                    local v54 = Instance.new("Highlight")
+                    v54.Name = "NoktPcESP"
+                    v54.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                    v54.Adornee = v52
+                    v54.FillColor = v53.Color
+                    v54.OutlineColor = v53.Color
+                    v54.FillTransparency = 0.5
+                    v54.OutlineTransparency = 0.2
+                    v54.Parent = vu8
+                    table.insert(vu14.pcs, v54)
+                end
+            end
+        end
+    end
+    local v55, v56, v57 = ipairs(vu14.pods)
+    while true do
+        local v58
+        v57, v58 = v55(v56, v57)
+        if v57 == nil then
+            break
+        end
+        if v58 and v58.Parent then
+            v58:Destroy()
+        end
+    end
+    vu14.pods = {}
+    if vu5.FtfEspPods and vu5.FtfEspPods.Value then
+        local v59 = vu8
+        local v60, v61, v62 = ipairs(v59:GetDescendants())
+        while true do
+            local v63
+            v62, v63 = v60(v61, v62)
+            if v62 == nil then
+                break
+            end
+            if v63.Name == "FreezePod" and v63:IsA("Model") then
+                local v64 = Instance.new("Highlight")
+                v64.Name = "NoktPodESP"
+                v64.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                v64.Adornee = v63
+                v64.FillColor = Color3.fromRGB(0, 200, 255)
+                v64.OutlineColor = Color3.fromRGB(0, 150, 200)
+                v64.FillTransparency = 0.5
+                v64.OutlineTransparency = 0.2
+                v64.Parent = vu8
+                table.insert(vu14.pods, v64)
+            end
+        end
+    end
+    local v65, v66, v67 = ipairs(vu14.exits)
+    while true do
+        local v68
+        v67, v68 = v65(v66, v67)
+        if v67 == nil then
+            break
+        end
+        if v68 and v68.Parent then
+            v68:Destroy()
+        end
+    end
+    vu14.exits = {}
+    if vu5.FtfEspExits and vu5.FtfEspExits.Value then
+        local v69 = vu8
+        local v70, v71, v72 = ipairs(v69:GetDescendants())
+        while true do
+            local v73
+            v72, v73 = v70(v71, v72)
+            if v72 == nil then
+                break
+            end
+            if v73.Name == "ExitDoor" and v73:IsA("Model") then
+                local v74 = Instance.new("Highlight")
+                v74.Name = "NoktExitESP"
+                v74.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                v74.Adornee = v73
+                v74.FillColor = Color3.fromRGB(255, 255, 0)
+                v74.OutlineColor = Color3.fromRGB(200, 200, 0)
+                v74.FillTransparency = 0.5
+                v74.OutlineTransparency = 0.2
+                v74.Parent = vu8
+                table.insert(vu14.exits, v74)
+            end
+        end
+    end
+end
+vu75()
+vu7.PlayerAdded:Connect(function(p76)
+    p76.CharacterAdded:Connect(function(_)
+        if vu5.FtfEspPlayers and vu5.FtfEspPlayers.Value then
+            vu75()
+        end
+    end)
+    if vu5.FtfEspPlayers and vu5.FtfEspPlayers.Value then
+        vu75()
+    end
+end)
+vu7.PlayerRemoving:Connect(function(p77)
+    if vu5.FtfEspPlayers and vu5.FtfEspPlayers.Value then
+        local v78, v79, v80 = ipairs(vu14.players)
+        while true do
+            local v81
+            v80, v81 = v78(v79, v80)
+            if v80 == nil then
+                break
+            end
+            if v81 and (v81.Adornee and v81.Adornee.Parent == p77) then
+                v81:Destroy()
+                table.remove(vu14.players, v80)
+                break
+            end
+        end
+    end
+end)
+local vu82 = nil
+pcall(function()
+    vu82 = hookmetamethod(game, "__namecall", function(p83, ...)
+        local v84 = {
+            ...
+        }
+        if getnamecallmethod() ~= "FireServer" or (tostring(p83) ~= "RemoteFunction" or (# v84 <= 0 or (v84[1] ~= "SetPlayerMinigameResult" or not (vu5.FtfAntiPcError and vu5.FtfAntiPcError.Value)))) then
+            return vu82(p83, unpack(v84))
+        end
+        vu1:Notify({
+            Title = "Nokt",
+            Content = "Minigame result forced to success!",
+            Duration = 3
+        })
+        v84[2] = true
+        return vu82(p83, unpack(v84))
+    end)
+end)
+local function vu86(p85)
+    if p85 and p85.Character and p85.Character:FindFirstChild("HumanoidRootPart") then
+        if vu13 then
+            vu13.CFrame = p85.Character.HumanoidRootPart.CFrame + Vector3.new(0, 3, 0)
+            vu1:Notify({
+                Title = "Nokt",
+                Content = "Teleported to " .. p85.Name,
+                Duration = 3
+            })
+        else
+            vu1:Notify({
+                Title = "Nokt",
+                Content = "Your character\'s RootPart not found.",
+                Duration = 3,
+                Type = "Error"
+            })
+        end
+    else
+        vu1:Notify({
+            Title = "Nokt",
+            Content = "Target player or their character not found.",
+            Duration = 3,
+            Type = "Error"
+        })
+        return
+    end
+end
+local v87 = v6.Visuals:AddSection("ESP Settings")
+v87:AddToggle("FtfEspPlayers", {
+    Title = "Players ESP",
+    Description = "Highlights players. Beast is shown in red.",
+    Default = false,
+    Callback = vu75
+})
+v87:AddToggle("FtfEspPcs", {
+    Title = "Computers ESP",
+    Description = "Highlights computer tables.",
+    Default = false,
+    Callback = vu75
+})
+v87:AddToggle("FtfEspPods", {
+    Title = "Freeze Pods ESP",
+    Description = "Highlights freeze pods.",
+    Default = false,
+    Callback = vu75
+})
+v87:AddToggle("FtfEspExits", {
+    Title = "Exits ESP",
+    Description = "Highlights exit doors.",
+    Default = false,
+    Callback = vu75
+})
+local v88 = v6.Utilities:AddSection("General Tools")
+v88:AddToggle("FtfAntiPcError", {
+    Title = "Anti PC Error",
+    Description = "Automatically succeeds computer minigames.",
+    Default = false,
+    Callback = function(p89)
+        if p89 then
+            vu1:Notify({
+                Title = "Nokt",
+                Content = "Anti PC Error Enabled",
+                Duration = 3
+            })
+        else
+            vu1:Notify({
+                Title = "Nokt",
+                Content = "Anti PC Error Disabled",
+                Duration = 3
+            })
+        end
+    end
+})
+v88:AddToggle("FtfFlashlight", {
+    Title = "Flashlight",
+    Description = "Toggles a personal light source.",
+    Default = false,
+    Callback = function(p90)
+        if vu15 then
+            vu15.Brightness = p90 and 2.5 or 0
+        end
+    end
+})
+local v91 = v6.Movement:AddSection("Speed Controls")
+v91:AddInput("FtfWalkspeedInput", {
+    Title = "Set Walkspeed",
+    Description = "Enter desired walkspeed value.",
+    Default = tostring(vu16),
+    Placeholder = "e.g., 50",
+    Numeric = true,
+    Finished = true,
+    Callback = function(p92)
+        local v93 = tonumber(p92)
+        if v93 then
+            vu16 = v93
+            if vu12 and not vu17 then
+                vu12.WalkSpeed = vu16
+            end
+            vu1:Notify({
+                Title = "Nokt",
+                Content = "Walkspeed set to " .. vu16,
+                Duration = 3
+            })
+        else
+            vu1:Notify({
+                Title = "Nokt",
+                Content = "Invalid walkspeed value.",
+                Duration = 3,
+                Type = "Error"
+            })
+        end
+    end
+})
+v91:AddToggle("FtfWalkspeedLock", {
+    Title = "Lock Walkspeed",
+    Description = "Prevents game from changing your walkspeed.",
+    Default = false,
+    Callback = function(p94)
+        vu17 = p94
+        if not p94 and vu12 then
+            vu12.WalkSpeed = vu16
+        end
+    end
+})
+v91:AddButton({
+    Title = "Unlock All (Reset Speed)",
+    Description = "Resets walkspeed to default and unlocks it.",
+    Callback = function()
+        vu17 = false
+        vu16 = 18
+        if vu12 then
+            vu12.WalkSpeed = vu16
+        end
+        vu5.FtfWalkspeedLock:SetValue(false)
+        vu5.FtfWalkspeedInput:SetValue(tostring(vu16))
+        vu1:Notify({
+            Title = "Nokt",
+            Content = "Walkspeed unlocked and reset.",
+            Duration = 3
+        })
+    end
+})
+v91:AddButton({
+    Title = "Noclip",
+    Description = "It is used to go through walls.",
+    Callback = function()loadstring(game:HttpGet("https://raw.githubusercontent.com/ianxzz/Noclip/refs/heads/main/ScriptLua"))()
+            Title = "Nokt",
+            Content = "Noclip actived",
+            Duration = 3
+        })
+    end
+})
+local v95 = v6.Teleport:AddSection("Player Teleportation")
+local function vu102()
+    local v96 = vu7
+    local v97, v98, v99 = ipairs(v96:GetPlayers())
+    local v100 = {}
+    while true do
+        local v101
+        v99, v101 = v97(v98, v99)
+        if v99 == nil then
+            break
+        end
+        if v101 ~= vu10 then
+            table.insert(v100, v101.Name)
+        end
+    end
+    return # v100 == 0 and {
+        "No other players"
+    } or v100
+end
+local vu103 = v95:AddDropdown("FtfTeleportPlayerDropdown", {
+    Title = "Select Player",
+    Description = "Choose a player to teleport to.",
+    Values = vu102(),
+    Multi = false,
+    Default = 1
+})
+v95:AddButton({
+    Title = "Refresh Player List",
+    Description = "Updates the player dropdown.",
+    Callback = function()
+        local v104 = vu102()
+        vu103:SetValues(v104)
+        vu103:SetValue(v104[1] or "No other players")
+        vu1:Notify({
+            Title = "Nokt",
+            Content = "Player list refreshed.",
+            Duration = 2
+        })
+    end
+})
+v95:AddButton({
+    Title = "Teleport to Selected Player",
+    Description = "Warps you to the player chosen in the dropdown.",
+    Callback = function()
+        local v105 = vu5.FtfTeleportPlayerDropdown.Value
+        if v105 and v105 ~= "No other players" then
+            vu86((vu7:FindFirstChild(v105)))
+        else
+            vu1:Notify({
+                Title = "Nokt",
+                Content = "No player selected or no other players available.",
+                Duration = 3,
+                Type = "Warning"
+            })
+        end
+    end
+})
+local v106 = v6.Teleport:AddSection("Quick Teleports")
+v106:AddButton({
+    Title = "Teleport to Random Survivor",
+    Description = "Instantly teleports you to a random survivor.",
+    Callback = function()
+        local v107 = vu31()
+        if # v107 <= 0 then
+            vu1:Notify({
+                Title = "Nokt",
+                Content = "No survivors found to teleport to.",
+                Duration = 3,
+                Type = "Warning"
+            })
+        else
+            vu86(v107[math.random(1, # v107)])
+        end
+    end
+})
+v106:AddButton({
+    Title = "Teleport to Beast",
+    Description = "Instantly teleports you to the Beast.",
+    Callback = function()
+        local v108 = vu23()
+        if v108 then
+            vu86(v108)
+        else
+            vu1:Notify({
+                Title = "Nokt",
+                Content = "Beast not found.",
+                Duration = 3,
+                Type = "Warning"
+            })
+        end
+    end
+})
+v9.RenderStepped:Connect(function()
+    if vu17 and (vu12 and vu13) then
+        vu12.WalkSpeed = vu16
+    end
+end)
+v4:SelectTab(1)
+v2:SetLibrary(vu1)
+v3:SetLibrary(vu1)
+v3:SetFolder("Nokt")
+v2:SetFolder("Nokt/Flee the Facility")
+v3:BuildInterfaceSection(v6.Settings)
+v2:BuildConfigSection(v6.Settings)
+v4:SelectTab(1)
+vu1:Notify({
+    Title = "Nokt",
+    Content = "The script has been loaded.",
+    Duration = 8
+})
+v2:LoadAutoloadConfig()
