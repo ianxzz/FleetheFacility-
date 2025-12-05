@@ -1,6 +1,3 @@
--- ts file was generated at discord.gg/25ms
-
-
 local vu1 = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local v2 = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local v3 = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -431,16 +428,6 @@ v91:AddButton({
         vu1:Notify({
             Title = "Nokt",
             Content = "Walkspeed unlocked and reset.",
-            Duration = 3
-        })
-    end
-})
-v91:AddButton({
-    Title = "Noclip",
-    Description = "It is used to go through walls.",
-    Callback = function()loadstring(game:HttpGet("https://raw.githubusercontent.com/ianxzz/Noclip/refs/heads/main/ScriptLua"))()
-            Title = "Nokt",
-            Content = "Noclip actived",
             Duration = 3
         })
     end
